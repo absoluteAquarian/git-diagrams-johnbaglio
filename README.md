@@ -85,3 +85,40 @@ flowchart TD
         cc5-->|Yes|cca1
     end
 ```
+### System Architecture Diagram
+```mermaid
+architecture-beta
+    group frontend(internet)[Userspace]
+    group backend(internet)[Backend]
+    group admin(server)[Admin Dashboard]
+
+    service api_endpoints_user(internet)[API Endpoints] in frontend
+    service user_interface_user(server)[User Interface] in frontend
+    service api_endpoints_backend(internet)[API Endpoints] in backend
+    service database(database)[Database] in backend
+    service db_storage(disk)[Data Storage] in backend
+    service api_endpoints_admin(internet)[API Endpoints] in admin
+    service user_interface_admin(server)[User Interface] in admin
+
+    junction junction_api
+
+    junction_api:L -- R:api_endpoints_user
+    api_endpoints_user:L -- R:user_interface_user
+    junction_api:B -- T:api_endpoints_admin
+    api_endpoints_admin:L -- R:user_interface_admin
+    junction_api:R -- L:api_endpoints_backend
+    api_endpoints_backend:T -- B:database
+    database:R -- L:db_storage
+```
+### API Endpoints Table
+| Endpoint | HTTP Method | Requirements
+|----------|-------------|-------------
+| Fetch Pokémon cards | `GET` | None
+| Create card deck | `POST` | User
+| Update card deck | `POST` | User
+| Save card deck | `POST` | User
+| Submit card request | `POST` | User
+| Add new card | `POST` | Administrator
+| Delete card | `POST` | Administrator
+| Fetch card submissions | `GET` | Administrator
+| Accept/reject card submission | `POST` | Administrator
